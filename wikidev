@@ -1,0 +1,177 @@
+#!/bin/bash
+
+#
+#	Helper functions
+#
+
+verbose()
+{
+	tput setaf 6
+	echo "$*"
+	tput sgr0
+}
+
+die()
+{
+	tput setaf 1
+	echo "$*"
+	tput sgr0
+	exit 1
+}
+
+#
+#	Sanity check
+#
+
+if [ -z "$(which docker 2> /dev/null)" ]
+then
+	die "Docker not installed on your system"
+fi
+
+#
+#	Main script
+#
+
+verbose
+verbose "WELCOME TO THE WIKI DEVELOPMENT CONTAINER SETUP SCRIPT!"
+verbose "-------------------------------------------------------"
+verbose
+verbose "This script downloads and installs the OpenFMN wiki development"
+verbose "environment in the form of a Docker container. This scripts also"
+verbose "installs Portainer, a simple GUI to manage Docker installations."
+verbose "Prior to running this script, Docker has to be installed on the"
+verbose "system which can either be a Linux distribution or MacOS."
+verbose
+
+#
+#	Download wikidev image (if required)
+#
+
+if [ -z "$(docker image ls | grep openfmn/wikidev)" ]
+then
+	verbose "Connecting to the container registry..."
+	verbose "Please provide your Tidepedia credentials"
+	verbose
+
+	docker login https://tide.act.nato.int/
+	verbose
+
+	verbose "Downloading WikiDev image..."
+	verbose
+
+	docker pull tide.act.nato.int/openfmn/wikidev:latest
+	docker logout https://tide.act.nato.int/ >/dev/null
+	verbose
+
+else
+	verbose "Wiki development image already downloaded"
+	verbose
+fi
+
+#
+#	Create wikidev volume (if required)
+#
+
+if [ -z "$(docker volume ls | grep wikidev)" ]
+then
+	verbose "Creating wikidev volume..."
+	docker volume create wikidev
+	verbose
+	
+else
+	verbose "Wikidev volume already created"
+	verbose
+fi
+
+#
+#	Install wikidev container (if required)
+#
+
+if [ -z "$(docker container ls --all | grep wikidev)" ]
+then
+	verbose "Installing wikidev container..."
+
+	PASSWORD="$(hexdump -vn 10 -e '/1 "%02x"' /dev/urandom)"
+
+	docker run \
+		--detach \
+		--restart=always \
+		--env "OPENFMN_REGISTRY=tide.act.nato.int" \
+		--env "OPENFMN_OUTSIDE_HOSTNAME=www.openfmn.org" \
+		--env "OPENFMN_OUTSIDE_METHOD=http" \
+		--env "OPENFMN_ADMIN_EMAIL=admin@openfmn.org" \
+		--env "OPENFMN_DIRECTORY_HOST=127.0.0.1" \
+		--env "OPENFMN_DIRECTORY_PORT=389" \
+		--env "OPENFMN_DIRECTORY_ROOTDN=dc=openfmn,dc=org" \
+		--env "OPENFMN_DIRECTORY_BINDDN=cn=root,dc=openfmn,dc=org" \
+		--env "OPENFMN_DIRECTORY_BIND_URL=ldap://127.0.0.1:389/dc=openfmn,dc=org?uid,displayName,mail" \
+		--env "OPENFMN_ORGANIZATION=OpenFMN" \
+		--env "OPENFMN_EMAIL_HOST=127.0.0.1" \
+		--env "OPENFMN_SMTP_RELAYHOST=" \
+		--env "OPENFMN_DATABASE_HOST=127.0.0.1" \
+		--env "OPENFMN_DATABASE_PORT=3306" \
+		--env "OPENFMN_DIRECTORY_PASSWORD=${PASSWORD}" \
+		--env "OPENFMN_DATABASE_PASSWORD=${PASSWORD}" \
+		--env "OPENFMN_ROBOT_PASSWORD=${PASSWORD}" \
+		--env "OPENFMN_MANAGER_PASSWORD=manager" \
+		--name wikidev \
+		--hostname=wikidev \
+		--volume wikidev:/data \
+		--publish 127.0.0.1:8000:80 \
+		tide.act.nato.int/openfmn/wikidev:latest
+
+	verbose
+
+else
+	verbose "Wiki development container already installed"
+	verbose
+fi
+
+#
+#	Create portainer volume (if required)
+#
+
+if [ -z "$(docker volume ls | grep portainer)" ]
+then
+	verbose "Creating portainer volume..."
+	docker volume create portainer
+	verbose
+	
+else
+	verbose "Portainer volume already created"
+	verbose
+fi
+
+#
+#	Install portainer (if required)
+#
+
+if [ -z "$(docker container ls --all | grep portainer)" ]
+then
+	verbose "Installing portainer..."
+
+	docker run \
+		--detach \
+		--restart=always \
+		--name portainer \
+		--hostname=portainer \
+		--publish 127.0.0.1:9000:9000 \
+		--volume /var/run/docker.sock:/var/run/docker.sock \
+		--volume portainer:/data \
+		portainer/portainer \
+		--no-auth \
+		-H unix:///var/run/docker.sock
+
+	verbose
+
+else
+	verbose "Pontainer already installed"
+	verbose
+fi
+
+echo "Wiki development containers have been successfully installed!"
+echo "-------------------------------------------------------------"
+echo
+echo "You can connect to your wiki admin console at http://localhost:8000/admin/"
+echo "or you can inspect your containers at http://localhost:9000/"
+echo
