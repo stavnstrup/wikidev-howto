@@ -20,6 +20,9 @@ The Wiki management environment is able to handle multiple wiki instances. Befor
 
     http://localhost:8000/admin/
 
+Note, that to use the management console in the container, you need to present your credentials. The default administrator
+use the word *manager* for both the username and the password.
+
 Press the Create button and fill in the *ID* and *Name* fields. For the NISP project potential values for id and name could be **nisp12** and **NISP**.
 
 When the Wiki has been created, you can access it
@@ -30,12 +33,18 @@ When the Wiki has been created, you can access it
 
 The Wiki instance with application pages and data is done using the Wiki Automation Tool (WAT), which create a bunch of application pages, form, reports etc based on a semantic datamodel, which describes all concepts and properties of the datamodel.
 
-To setup the NISP Wiki, you need a development directory, where you must create three subdirectories: one for the wat tool, one for the NISP domain and a Data directory, where credentials and an intermediate representation of the data model and eventually data are located.
+The WAT tool is a Python script and depend on the following Python libraries **FIX ME**, which must be installed using the command **FIX ME**.
+
+The WAT tool can be fetched from the git repository at https://tide.act.nato.int/git/tide/wat
+
+This note works with commit 56594b3c59 from Mar 8, 2019.
+
+To setup the NISP Wiki, you need a development directory, where you must create two subdirectories: one for the wat tool and one for the NISP domain.
 
       --wikidev
            |------ nisp
            |------ wat
-           |------ Data
+
 
 This can be done in the following steps:
 
@@ -43,9 +52,7 @@ This can be done in the following steps:
 2. cd wikidev
 3. git clone https://tide.act.nato.int/git/tide/nisp
 4. git clone https://tide.act.nato.int/git/tide/wat
-5. mkdir Data
 
-And finally you should copy the file *LocalSettings.py* to the Data directory.
 
 ### Publishing the datamodel
 
@@ -53,11 +60,11 @@ The data model located in *nisp/datamodel.xml* describes the concepts and proper
 
 It is published in the following way. From the nisp directory run the following command
 
-    ../wat/wat.sh --wiki nisp12
+    ../wat/wat.sh --wiki http://localhost:8000/nisp12 --username manager --password manager
 
 After the first publication, Tomasz recommends that the following command is run a couple of times
 
-    ../wat/wat.sh --wiki nisp12 --clearCache
+    ../wat/wat.sh --wiki http://localhost:8000/nisp12 --clearCache --username manager --password manager
 
 ### Publishing the data
 
@@ -73,7 +80,7 @@ The pages are generated with the command
 
 The generated pages can be uploaded to the wiki instance using the command
 
-    ../wat/wat.sh --wiki nisp12 --deployData
+    ../wat/wat.sh --wiki http://localhost:8000/nisp12 --deployData --username manager --password manager
     
 ## Usefull pages in the wiki
 
