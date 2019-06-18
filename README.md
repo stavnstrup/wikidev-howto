@@ -33,7 +33,9 @@ When the Wiki has been created, you can access it
 
 The Wiki instance with application pages and data is done using the Wiki Automation Tool (WAT), which create a bunch of application pages, form, reports etc based on a semantic datamodel, which describes all concepts and properties of the datamodel.
 
-The WAT tool is a Python script and depend on the following Python libraries **FIX ME**, which must be installed using the command **FIX ME**.
+The WAT tool is a Python script and works with Python 2.7.15 and depend on the following Python libraries **FIX ME**, which must be installed using the command
+
+    sudo pip install ????? pathlib2
 
 The WAT tool can be fetched from the git repository at https://tide.act.nato.int/git/tide/wat
 
