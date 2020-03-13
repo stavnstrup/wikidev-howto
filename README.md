@@ -72,7 +72,7 @@ After the first publication, Tomasz recommends that the following command is run
 
 Pages containing data complying with the datamodel should be stored in the folder
 
-    Data/NISP/data/pages/Main/
+    ./build/data/pages/Main/
 
 The stylesheet located in nisp/tools is a XSLT 2 stylesheet, which utilizes the [SAXON XSLT processor](http://saxon.sourceforge.net/) ablity to serialize processing of XML. The stylesheet generate pages for all concepts an properties taken from the NISP XML database. The stylesheet has been tested with Saxon version 9.1.
 
@@ -83,6 +83,18 @@ The pages are generated with the command
 The generated pages can be uploaded to the wiki instance using the command
 
     ../wat/wat.sh --wiki http://localhost:8000/nisp12 --deployData --username manager --password manager
+    
+## Uploading to an external site
+
+If you want to upload the generated pages to a wiki instance, which does not support the wat tools *deployData* flag, you can instead create archive of the wiki and data pages by running the two commands
+
+    ../wat/wat.sh --wiki http://localhost:8000/nisp12 --generateArchive
+
+and
+
+    ../wat/wat.sh --wiki http://localhost:8000/nisp12 --generateDataArchive
+
+and subsequently load the archives into your version of the semantic wiki.
     
 ## Usefull pages in the wiki
 
