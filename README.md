@@ -39,7 +39,7 @@ The WAT tool is a Python script and works with Python 2.7.15 and depend on a num
 
 The WAT tool can be fetched from the git repository at https://tide.act.nato.int/git/tide/wat
 
-This note works with commit 8560a7c77b from Jun 14, 2019.
+This note works with commit ba4395d822 from Mar 10, 2020.
 
 To setup the NISP Wiki, you need a development directory, where you must create two subdirectories: one for the wat tool and one for the NISP domain.
 
