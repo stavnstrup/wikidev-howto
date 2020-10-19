@@ -4,7 +4,7 @@ This note describes the steps necessary to setup a container based environment f
 
 ## Installing a Semantic Wiki container
 
-The Wiki development environment container image exists in a Docker repository at TIDE. In order to install it, you first need to fetch the installation script, using the command 
+The Wiki development environment container image exists in a Docker repository at TIDE. In order to install it, you first need to fetch the installation script, using the command
 
     wget http://goosje.com/wikidev
 
@@ -21,9 +21,9 @@ The Wiki management environment is able to handle multiple wiki instances. Befor
     http://localhost:8000/admin/
 
 Note, that to use the management console in the container, you need to present your credentials. The default administrator
-use the word *manager* for both the username and the password.
+use the word _manager_ for both the username and the password.
 
-Press the Create button and fill in the *ID* and *Name* fields. For the NISP project potential values for id and name could be **nisp12** and **NISP**.
+Press the Create button and fill in the _ID_ and _Name_ fields. For the NISP project potential values for id and name could be **nisp12** and **NISP**.
 
 When the Wiki has been created, you can access it
 
@@ -47,18 +47,16 @@ To setup the NISP Wiki, you need a development directory, where you must create 
            |------ nisp
            |------ wat
 
-
 This can be done in the following steps:
 
 1. mkdir wikidev
 2. cd wikidev
-3. git clone https://tide.act.nato.int/git/tide/nisp
-4. git clone https://tide.act.nato.int/git/tide/wat
-
+3. git clone https://tide.act.nato.int/git/tide/nisp.git
+4. git clone https://tide.act.nato.int/git/team/wat.git
 
 ### Publishing the datamodel
 
-The data model located in *nisp/datamodel.xml* describes the concepts and properties of the NISP datamodel.
+The data model located in _nisp/datamodel.xml_ describes the concepts and properties of the NISP datamodel.
 
 It is published in the following way. From the nisp directory run the following command
 
@@ -83,10 +81,10 @@ The pages are generated with the command
 The generated pages can be uploaded to the wiki instance using the command
 
     ../wat/wat.sh --wiki http://localhost:8000/nisp12 --deployData --username manager --password manager
-    
+
 ## Uploading to an external site
 
-If you want to upload the generated pages to a wiki instance, which does not support the wat tools *deployData* flag, you can instead create archive of the wiki and data pages by running the two commands
+If you want to upload the generated pages to a wiki instance, which does not support the wat tools _deployData_ flag, you can instead create archive of the wiki and data pages by running the two commands
 
     ../wat/wat.sh --wiki http://localhost:8000/nisp12 --generateArchive
 
@@ -95,14 +93,14 @@ and
     ../wat/wat.sh --wiki http://localhost:8000/nisp12 --generateDataArchive
 
 and subsequently load the archives into your version of the semantic wiki.
-    
+
 ## Usefull pages in the wiki
 
 The Wiki comes installed with a number of useful pages, which can be found via the search box.
 
-* Project:Data Model - Describes the conceptual data model for the specific domain
-* Project:Data Browser - List the packages and concepts in the data model with links to the actual data
-* Project:Wiki Model - A copy of the data model file
-* Project:Software - Lists the application pages generated from the Wiki model
-* Help:Developer Manual - Describes the Wiki development process
-* Special:Version - Lists installed software packages, plugins, themes etc.
+- Project:Data Model - Describes the conceptual data model for the specific domain
+- Project:Data Browser - List the packages and concepts in the data model with links to the actual data
+- Project:Wiki Model - A copy of the data model file
+- Project:Software - Lists the application pages generated from the Wiki model
+- Help:Developer Manual - Describes the Wiki development process
+- Special:Version - Lists installed software packages, plugins, themes etc.
